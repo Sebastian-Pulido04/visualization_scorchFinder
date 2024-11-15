@@ -1,6 +1,6 @@
 # Variables
 CXX = g++
-CXXFLAGS = -Wall -g -I$(SRC_DIR)/imgui `sdl2-config --cflags`
+CXXFLAGS = -Wall -g -I$(SRC_DIR)/imgui -Iinclude `sdl2-config --cflags`
 LDFLAGS = `sdl2-config --libs` -lSDL2_image
 
 # Source files directory

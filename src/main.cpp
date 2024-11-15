@@ -5,6 +5,12 @@
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
 
+/* Nuestreos headers*/
+#include "main_menu.h"
+
+/* Variables globales y de control*/
+bool inspection_finished = false; // flag que comienza la creacion de los menus y las ventanas
+
 int main(int, char**)
 {
     /*-------------------------------- Initialization -------------------------------*/
@@ -57,6 +63,7 @@ int main(int, char**)
 
     bool show_image_window = true;
     bool done = false;
+    //bool show_main_menu = false; // booleano para boton de main menu
 
     // Main loop
     while (!done)
@@ -86,9 +93,13 @@ int main(int, char**)
             ImGui::Begin("PCB", &show_image_window);
             //ImGui::Text("Here's an image:");
             ImGui::Image((ImTextureID)(intptr_t)image_texture, ImVec2(image_width, image_height)); 
+            if(ImGui::Button("Mostrar menu")) inspection_finished = !inspection_finished;
             ImGui::End();
         }
         ImGui::ShowDemoWindow();
+        create_main_menu(inspection_finished);
+        
+
 
 
 
