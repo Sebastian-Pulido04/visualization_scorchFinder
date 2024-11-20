@@ -7,9 +7,18 @@
 
 /* Nuestreos headers*/
 #include "main_menu.h"
+#include "PCB.h"
+#include "Component.h"
 
 /* Variables globales y de control*/
 bool inspection_finished = false; // flag que comienza la creacion de los menus y las ventanas
+// idx_pcb puede ser una variable global que se modifique en el tab de components con el drop-down menu
+// se puede usar aqui para escoger la imagen de la pcb a elegir 
+size_t item_selected_idx  = 0; 
+// En main estara el vector de todas las pcbs analizadas ------->  std::vector<PCB> pcbs
+// las imagenes se podran accesar con ------> pcbs[idx_pcb].get_image
+
+
 
 int main(int, char**)
 {
@@ -63,7 +72,6 @@ int main(int, char**)
 
     bool show_image_window = true;
     bool done = false;
-    //bool show_main_menu = false; // booleano para boton de main menu
 
     // Main loop
     while (!done)
@@ -88,16 +96,21 @@ int main(int, char**)
         ImGui::NewFrame();
 
         /* PCB image window*/
+        // set default size for image window, like ImVec2(600,600)
         ImGui::SetNextWindowSize(ImVec2(image_width+30, image_height+30));
         if (show_image_window) {
             ImGui::Begin("PCB", &show_image_window);
-            //ImGui::Text("Here's an image:");
+            //SDL_Texture* current_pcb_image = pcbs[idx_pcb].get_image();
+            //int image_width = current_pcb_image.
+            //ImGui::Image((ImTextureID)(intptr_t) pcbs[idx_pcb].get_image(), ImVec2(image_width, image_height));
             ImGui::Image((ImTextureID)(intptr_t)image_texture, ImVec2(image_width, image_height)); 
             if(ImGui::Button("Mostrar menu")) inspection_finished = !inspection_finished;
+            ImGui::Text("The number is: %lu",item_selected_idx);
             ImGui::End();
         }
         ImGui::ShowDemoWindow();
         create_main_menu(inspection_finished);
+        
         
 
 
