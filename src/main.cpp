@@ -11,7 +11,8 @@
 #include "Component.h"
 
 /* Variables globales y de control*/
-bool inspection_finished = false; // flag que comienza la creacion de los menus y las ventanas
+// flag que comienza la creacion de los menus y las ventanas
+bool inspection_finished = false; 
 // idx_pcb puede ser una variable global que se modifique en el tab de components con el drop-down menu
 // se puede usar aqui para escoger la imagen de la pcb a elegir 
 size_t item_selected_idx  = 0; 

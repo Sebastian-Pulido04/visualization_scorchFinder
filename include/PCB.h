@@ -21,13 +21,14 @@ class PCB{
         std::pair<int,int> ir_dimensions;
 
     public:
+        PCB::PCB(std::string id);
         void show_info();
         void set_rgb_image(const char* image_path, SDL_Renderer* renderer);
-        SDL_Texture* get_rgb_image();
         void set_ir_image(const char* image_path, SDL_Renderer* renderer);
+        SDL_Texture* get_rgb_image();
         SDL_Texture* get_ir_image();
-        void set_rgb_dimensions(int width, int height);
         std::pair<int,int> get_rgb_dimensions();
+        std::pair<int,int> get_ir_dimensions();
 
 
 };
