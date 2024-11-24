@@ -62,6 +62,7 @@ int main(int, char**)
     pcbs[0].set_rgb_image("/home/sebastian_pulido/pcb_scan/tests/pcb_1.png",renderer);
     pcbs[1].set_rgb_image("/home/sebastian_pulido/pcb_scan/tests/pcb_2.png",renderer);
     pcbs[0].set_components(renderer);
+    pcbs[1].set_components(renderer);
 
 
     // Main loop
@@ -110,7 +111,7 @@ int main(int, char**)
         /* Rendering */
 
         ImGui::Render();
-        SDL_SetRenderDrawColor(renderer, 255, 144, 154, 255); // This changes the background color
+        SDL_SetRenderDrawColor(renderer, 200, 144, 154, 255); // This changes the background color
         SDL_RenderClear(renderer);
         ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(),renderer);
         SDL_RenderPresent(renderer);

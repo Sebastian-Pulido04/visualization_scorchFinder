@@ -79,8 +79,8 @@ void create_main_menu(bool enable, const std::vector<PCB>& pcbs_vector){
                     fill_components_tab(pcbs_vector);
 
                     // pcbs[item_selected_idx].show_information();
-                    ImGui::Text("Ítem seleccionado: %lu", item_selected_idx); 
-                    ImGui::Text("COMPONENTES"); // llamar a la funcion de components()
+                    //ImGui::Text("Ítem seleccionado: %lu", item_selected_idx); 
+                    //ImGui::Text("COMPONENTES"); // llamar a la funcion de components()
                     ImGui::EndTabItem();
                 }
 
@@ -129,23 +129,22 @@ void fill_components_tab(const std::vector<PCB>& pcbs){
         const char* label = item.first;
         if(ImGui::CollapsingHeader(label,ImGuiTreeNodeFlags_None)){ /* dentro del collapsing header ponemos las instancias*/
             for (auto & comp : item.second){
-
-                std::string unique_id = std::string(label) + "##" + std::string(comp.get_label());
+                /* unique_id es el id de la pcb mas el label del componente*/
+                std::string unique_id = pcbs[item_selected_idx].get_id() + "_" + std::string(comp.get_label());
                 if (component_states.find(unique_id) == component_states.end()) {
                     component_states[unique_id] = {false, false};
                 }
 
                 bool& show_image = component_states[unique_id].first;
                 bool& show_box = component_states[unique_id].second;
-
-                std::string im = unique_id + " show image";
-                std::string bx = unique_id + " show box";
+                // si hay componentes con el mismo label en otra pcb no hay conflicto porque no se muestran al mismo tiempo
+                std::string im =  std::string(comp.get_label()) + " show image"; 
+                std::string bx =  std::string(comp.get_label()) + " show box";
 
                 ImGui::Checkbox(im.c_str(),&show_image); 
                 ImGui::SameLine();
                 ImGui::Checkbox(bx.c_str(), &show_box);
-                //ImGui::SameLine();
-                //ImGui::Text(comp.get_label());
+
                 int image_width = comp.get_rgb_dimensions().first;
                 int image_height = comp.get_rgb_dimensions().second;
 

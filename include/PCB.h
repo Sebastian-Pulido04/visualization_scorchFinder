@@ -22,6 +22,7 @@ class PCB{
 
     public:
         PCB(std::string id);
+        std::string get_id() const;
         void set_components(SDL_Renderer* renderer);
         std::unordered_map<const char*, std::vector<Component>> get_components() const;
         void show_info();

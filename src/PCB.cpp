@@ -1,5 +1,9 @@
 #include "PCB.h"
 
+std::string PCB::get_id() const{
+    return this->id;
+}
+
 PCB::PCB(std::string label){
     this->id = "pcb_" + label;
 }
