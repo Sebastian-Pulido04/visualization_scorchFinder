@@ -6,13 +6,15 @@
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
 #include <vector>
+#include <string>
+
 
 
 /* El booleano enable nos dice que ya acabo el proceso de inspeccion y podemos llenar el menu con los datos
    Tambien debera recibir una referencia al vector de objetos de la clase pcb que se creara en main 
    std::vector<PCB> &pcbs
 */
-void create_main_menu(bool enable ){
+void create_main_menu(bool enable, const std::vector<PCB>& pcbs_vector){
         // para cada tab, podemos crear una child window
 
         // tab styling
@@ -66,7 +68,6 @@ void create_main_menu(bool enable ){
                             const bool is_selected = (item_selected_idx == n); // creacion dinamica de booleanos
                             if (ImGui::Selectable(pcbs[n], is_selected)){
                                 item_selected_idx = n;
-                                
                             }   
 
                             // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
@@ -75,6 +76,7 @@ void create_main_menu(bool enable ){
                         }
                         ImGui::EndCombo();
                     }
+                    fill_components_tab(pcbs_vector);
 
                     // pcbs[item_selected_idx].show_information();
                     ImGui::Text("Ítem seleccionado: %lu", item_selected_idx); 
@@ -114,4 +116,52 @@ void create_main_menu(bool enable ){
 
         ImGui::End();
 
+}
+/* Puede que esta funcion requiera como argumento la window de PCBs paraa dibujar la bounding box*/
+void fill_components_tab(const std::vector<PCB>& pcbs){
+    extern std::size_t item_selected_idx;
+    /* Creamos un mapa de componentes con sus respectivos booleanos para mostrar su imagen y bounding box, asi 
+        ya no hay problema con tener el mismo booleano para diferentes componentes y sus respectivos checkboxs
+     */
+    static std::unordered_map<std::string, std::pair<bool,bool>> component_states;
+
+    for (auto & item : pcbs[item_selected_idx].get_components()){ /* por cada categoria creamos un header colapsable*/
+        const char* label = item.first;
+        if(ImGui::CollapsingHeader(label,ImGuiTreeNodeFlags_None)){ /* dentro del collapsing header ponemos las instancias*/
+            for (auto & comp : item.second){
+
+                std::string unique_id = std::string(label) + "##" + std::string(comp.get_label());
+                if (component_states.find(unique_id) == component_states.end()) {
+                    component_states[unique_id] = {false, false};
+                }
+
+                bool& show_image = component_states[unique_id].first;
+                bool& show_box = component_states[unique_id].second;
+
+                std::string im = unique_id + " show image";
+                std::string bx = unique_id + " show box";
+
+                ImGui::Checkbox(im.c_str(),&show_image); 
+                ImGui::SameLine();
+                ImGui::Checkbox(bx.c_str(), &show_box);
+                //ImGui::SameLine();
+                //ImGui::Text(comp.get_label());
+                int image_width = comp.get_rgb_dimensions().first;
+                int image_height = comp.get_rgb_dimensions().second;
+
+                if(show_image){
+                    ImGui::SetNextWindowSize(ImVec2(image_width+30, image_height+30));
+                    ImGui::Begin(comp.get_label(), &show_image);
+                    ImGui::Image((ImTextureID)(intptr_t)comp.get_rgb_image(), ImVec2(image_width, image_height)); 
+                    ImGui::End();               
+                }
+
+                if(show_box){
+
+                }
+
+            }
+        }
+
+    }
 }
