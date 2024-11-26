@@ -5,6 +5,7 @@
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
 #include <vector>
+#include <iostream>
 
 /* Nuestreos headers*/
 #include "main_menu.h"
@@ -17,10 +18,13 @@ bool inspection_finished = false;
 // idx_pcb puede ser una variable global que se modifique en el tab de components con el drop-down menu
 // se puede usar aqui para escoger la imagen de la pcb a elegir 
 size_t item_selected_idx  = 0; 
+/* variable para poder dibujar las bounding boxes de los componentes de la pcbs*/
+ImVec2 pcb_window_position;
 // En main estara el vector de todas las pcbs analizadas ------->  std::vector<PCB> pcbs
 // las imagenes se podran accesar con ------> pcbs[idx_pcb].get_image
 std::vector<PCB> pcbs;
 /* NO SE PUEDE CORRER PUSH_BACK EN EL SCOPE GLOBAL */
+// hay que hacer una funcion que limpie todas las sdl textures de las imagenes en la parte de clean up
 
 
 
@@ -56,13 +60,42 @@ int main(int, char**)
 
     bool show_image_window = true;
     bool done = false;
-    /* Aqui va el llamado a fill_data()*/
+
+
+    /* Aqui va el llamado a fill_data(), que lee el JSON para todas las pcbs */
     pcbs.push_back(PCB("00"));
     pcbs.push_back(PCB("01"));
-    pcbs[0].set_rgb_image("/home/sebastian_pulido/pcb_scan/tests/pcb_1.png",renderer);
+    pcbs[0].set_rgb_image("/home/sebastian_pulido/pcb_scan/tests/pcb_og.jpg",renderer);
     pcbs[1].set_rgb_image("/home/sebastian_pulido/pcb_scan/tests/pcb_2.png",renderer);
     pcbs[0].set_components(renderer);
     pcbs[1].set_components(renderer);
+
+    // resolucion de la imagen. Considerar que habra un escalamiento para reducir las dimensiones.
+    std::pair<int,int> rgb_resolution = {600,600};
+    // medidas de la pcb (cuadrada) en milesimas de pulgada
+    float pcb_side = 1732.28;
+    // factor de escalamiento en pixeles por milesima de pulgada
+    std::pair <float,float> scaling_factor = {rgb_resolution.first / pcb_side, rgb_resolution.second / pcb_side};
+    /* mapa de ubicaciones de los componentes*/
+    std::unordered_map<const char*,std::pair<int,int>> components_centers = 
+    {
+        {"RLY1", {(int)(1220 * scaling_factor.first),(int)(924.213 * scaling_factor.second)}},
+        {"PROG1", {(int)(430 * scaling_factor.first),(int)(125 * scaling_factor.second)}},
+        {"LDO1", {(int)(300 * scaling_factor.first),(int)(1300 * scaling_factor.second)}},
+        {"uC1", {(int)(420 * scaling_factor.first),(int)(380 * scaling_factor.second)}},
+        {"R4", {(int)(615 * scaling_factor.first),(int)(400 * scaling_factor.second)}},
+        {"R3", {(int)(475 * scaling_factor.first),(int)(1490 * scaling_factor.second)}},
+        {"R2", {(int)(475 * scaling_factor.first),(int)(1580 * scaling_factor.second)}},
+        {"R1", {(int)(225 * scaling_factor.first),(int)(395 * scaling_factor.second)}},
+        {"Q2", {(int)(670 * scaling_factor.first),(int)(760 * scaling_factor.second)}},
+        {"Q1", {(int)(105 * scaling_factor.first),(int)(385 * scaling_factor.second)}},
+        {"D2", {(int)(670 * scaling_factor.first),(int)(1100 * scaling_factor.second)}},
+        {"D1", {(int)(305 * scaling_factor.first),(int)(1545 * scaling_factor.second)}},
+        {"C3", {(int)(100 * scaling_factor.first),(int)(1375 * scaling_factor.second)}},
+        {"C2", {(int)(550 * scaling_factor.first),(int)(1365 * scaling_factor.second)}},
+        {"C1", {(int)(365 * scaling_factor.first),(int)(545 * scaling_factor.second)}}
+        
+    };
 
 
     // Main loop
@@ -98,10 +131,12 @@ int main(int, char**)
             ImGui::Image((ImTextureID)(intptr_t)pcbs[item_selected_idx].get_rgb_image(), ImVec2(image_width, image_height)); 
             if(ImGui::Button("Mostrar menu")) inspection_finished = !inspection_finished;
             ImGui::Text("The number is: %lu",item_selected_idx);
+            pcb_window_position = ImGui::GetWindowPos();
             ImGui::End();
         }
         ImGui::ShowDemoWindow();
         create_main_menu(inspection_finished, pcbs);
+        
         
         
 
@@ -111,13 +146,15 @@ int main(int, char**)
         /* Rendering */
 
         ImGui::Render();
-        SDL_SetRenderDrawColor(renderer, 200, 144, 154, 255); // This changes the background color
+        SDL_SetRenderDrawColor(renderer, 200, 144, 0, 255); // This changes the background color
         SDL_RenderClear(renderer);
         ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(),renderer);
         SDL_RenderPresent(renderer);
     }
 
     /* Clean up */
+
+    free_textures(pcbs);
     ImGui_ImplSDLRenderer2_Shutdown();
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();

@@ -10,6 +10,7 @@ En realidad no, ya que vamos a poder acceder a los datos generados en cualquier 
 */
 void create_main_menu(bool enable, const std::vector<PCB>& pcbs_vector);
 void fill_components_tab(const std::vector<PCB>& pcbs);
+void free_textures(std::vector<PCB>& pcbs_vector);
 
 
 

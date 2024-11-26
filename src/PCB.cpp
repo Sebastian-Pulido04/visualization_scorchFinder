@@ -15,12 +15,27 @@ void PCB::set_rgb_image(const char* image_path, SDL_Renderer* renderer){
         printf("Error loading image: %s\n", IMG_GetError());
         //return -1;
     }
-    // Getting original image dimentions to size the window 
-    this->rgb_dimensions.first = image_surface->w;
-    this->rgb_dimensions.second = image_surface->h;
+    // image_surface->h es el alto original de la imagen
+    // image_surface->w es el ancho original de la imagen
 
-    this->rgb_image = SDL_CreateTextureFromSurface(renderer, image_surface);
+    SDL_Texture* original_image = SDL_CreateTextureFromSurface(renderer, image_surface);
     SDL_FreeSurface(image_surface);
+    int desired_width = 600;
+    int desired_height = 600;
+    SDL_Texture* scaledTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, desired_width, desired_height);
+    SDL_SetRenderTarget(renderer, scaledTexture);
+    SDL_Rect destRect = {0, 0, desired_width, desired_height};
+    SDL_RenderCopy(renderer, original_image, NULL, &destRect);
+
+    // Restaurar el render target al predeterminado (pantalla)
+    SDL_SetRenderTarget(renderer, NULL);
+    SDL_DestroyTexture(original_image);
+
+    // aqui determinamos las dimensiones de la imagen escalada
+    this->rgb_dimensions.first = desired_width; 
+    this->rgb_dimensions.second = desired_height; 
+    this->rgb_image = scaledTexture;
+    
 }
 
 SDL_Texture* PCB::get_rgb_image() const{

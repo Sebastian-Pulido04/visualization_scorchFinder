@@ -30,7 +30,7 @@ void create_main_menu(bool enable, const std::vector<PCB>& pcbs_vector){
         window_flags |= ImGuiWindowFlags_NoMove;
         window_flags |= ImGuiWindowFlags_NoResize;
         
-        ImGui::SetNextWindowPos(ImVec2(650, 30));
+        ImGui::SetNextWindowPos(ImVec2(700, 30));
         ImGui::SetNextWindowSize(ImVec2(550,680));
         if(ImGui::Begin("Main Menu",NULL, window_flags)){
             
@@ -45,13 +45,8 @@ void create_main_menu(bool enable, const std::vector<PCB>& pcbs_vector){
                   
             */
 
-            /* Aqui van a ir los labels de las PCBs, probablemente haya que pasarle a la funcion la referencia al vector 
-               de pcbs (de la clase PCB), y acceder a los nombres con  pcbs[n].get_id()
-             */
-
-            std::vector<const char*> pcbs = {"PCB_0", "PCB_1", "PCB_2"};
             extern std::size_t item_selected_idx;
-            const char* combo_preview_value = pcbs[item_selected_idx];
+            const char* combo_preview_value = pcbs_vector[item_selected_idx].get_id().c_str();
             
     
             if (ImGui::BeginTabBar("Main Menu")){
@@ -63,10 +58,10 @@ void create_main_menu(bool enable, const std::vector<PCB>& pcbs_vector){
                     ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
                     if (ImGui::BeginCombo("##combo", combo_preview_value, 0))
                     {
-                        for (std::size_t n = 0; n < pcbs.size(); n++)
+                        for (std::size_t n = 0; n < pcbs_vector.size(); n++)
                         {
                             const bool is_selected = (item_selected_idx == n); // creacion dinamica de booleanos
-                            if (ImGui::Selectable(pcbs[n], is_selected)){
+                            if (ImGui::Selectable(pcbs_vector[n].get_id().c_str(), is_selected)){
                                 item_selected_idx = n;
                             }   
 
@@ -77,10 +72,6 @@ void create_main_menu(bool enable, const std::vector<PCB>& pcbs_vector){
                         ImGui::EndCombo();
                     }
                     fill_components_tab(pcbs_vector);
-
-                    // pcbs[item_selected_idx].show_information();
-                    //ImGui::Text("Ítem seleccionado: %lu", item_selected_idx); 
-                    //ImGui::Text("COMPONENTES"); // llamar a la funcion de components()
                     ImGui::EndTabItem();
                 }
 
@@ -107,9 +98,7 @@ void create_main_menu(bool enable, const std::vector<PCB>& pcbs_vector){
             que llenarlo independientemente de "enable". Si hay informacion nueva, hay que actualizar el tab*/
 
             if (enable) {
-                //Aqui se llena el menu de informacion
                 ImGui::Text("Hello guys");
-                // call fill_info()
             }
 
         }
@@ -148,19 +137,36 @@ void fill_components_tab(const std::vector<PCB>& pcbs){
                 int image_width = comp.get_rgb_dimensions().first;
                 int image_height = comp.get_rgb_dimensions().second;
 
-                if(show_image){
+                if (show_image){
                     ImGui::SetNextWindowSize(ImVec2(image_width+30, image_height+30));
                     ImGui::Begin(comp.get_label(), &show_image);
                     ImGui::Image((ImTextureID)(intptr_t)comp.get_rgb_image(), ImVec2(image_width, image_height)); 
                     ImGui::End();               
                 }
 
-                if(show_box){
+                if (show_box){
+                    /* para renderizar las bounding boxes de los componentes, la idea es renderizarlo en la ventana de pcb 
+                       si no se puede, la idea es obetener la ubicacion de esta ventana en todo momento y dibujar sobre toda 
+                       la window
+                    */
 
                 }
 
             }
         }
 
+    }
+}
+
+void free_textures(std::vector<PCB>& pcbs_vector){
+    for (auto pcb : pcbs_vector){
+        SDL_DestroyTexture(pcb.get_rgb_image());
+        // SDL_DestroyTexture(pcb.get_ir_image()); NOT CALLING RIGHT NOW CUZ PASSING NULL POINTER TRIGGERS AN ERROR
+        for (auto components : pcb.get_components()){
+            for (auto component : components.second){
+                SDL_DestroyTexture(component.get_rgb_image());
+                // SDL_DestroyTexture(component.get_ir_image()); NOT CALLING RIGHT NOW CUZ PASSING NULL POINTER TRIGGERS AN ERROR
+            }
+        }
     }
 }
