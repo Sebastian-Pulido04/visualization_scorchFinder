@@ -31,21 +31,10 @@ void create_main_menu(bool enable, const std::vector<PCB>& pcbs_vector){
         window_flags |= ImGuiWindowFlags_NoMove;
         window_flags |= ImGuiWindowFlags_NoResize;
         
-        ImGui::SetNextWindowPos(ImVec2(700, 30));
-        ImGui::SetNextWindowSize(ImVec2(550,680));
+        ImGui::SetNextWindowPos(ImVec2(675, 30));
+        ImGui::SetNextWindowSize(ImVec2(550,620));
         if(ImGui::Begin("Main Menu",NULL, window_flags)){
             
-            /* Creacion de los botones del menu principal
-            TODO: modificar el size de los tab_items y la posicion xx
-                  crear los child windows con el contenido de cada tab 
-                  crear las funciones para llenar (or retrieve) el contenido de cada tab
-                  como voy a hacer que se creen nuevas instancias de la clase Pcb cuando se corra el proceso?
-                  la solucion mas sencilla es que la aplicacion solo sea un visualizador, es decir, no comenzara 
-                  el proceso de inspeccion, solo se ejecutara una vez el proceso de inspeccion haya terminado y el 
-                  programa pueda obtener los datos que necesita de las carpetas
-                  
-            */
-
             extern std::size_t item_selected_idx;
             const char* combo_preview_value = pcbs_vector[item_selected_idx].get_id().c_str();
             
@@ -152,10 +141,6 @@ void fill_components_tab(const std::vector<PCB>& pcbs){
                     extern std::unordered_map<std::string,std::pair<float,float>> components_dimensions;
                     extern std::unordered_map<std::string,std::pair<float,float>> components_centers;
 
-                    /* faltaria agregar manejo de errores, por si se introduce un label incorrecto*/
-                    //std::cout<<"Center: "<<components_centers[comp.get_label()].first<<", "<<components_centers[comp.get_label()].second<<std::endl;
-                    //std::cout<<"Dimensions: "<<components_dimensions[comp.get_label()].first<<", "<<components_dimensions[comp.get_label()].second<<std::endl;
-
                     std::string comp_label = std::string(comp.get_label());
                     float x = pcb_window_position.x + components_centers.at(comp_label).first - components_dimensions.at(comp_label).first / 2;
                     float y = pcb_window_position.y + components_centers.at(comp_label).second - components_dimensions.at(comp_label).second / 2;
@@ -176,7 +161,7 @@ void fill_components_tab(const std::vector<PCB>& pcbs){
 void free_textures(std::vector<PCB>& pcbs_vector){
     for (auto pcb : pcbs_vector){
         SDL_DestroyTexture(pcb.get_rgb_image());
-        // SDL_DestroyTexture(pcb.get_ir_image()); NOT CALLING RIGHT NOW CUZ PASSING NULL POINTER TRIGGERS AN ERROR
+        SDL_DestroyTexture(pcb.get_ir_image()); //NOT CALLING RIGHT NOW CUZ PASSING NULL POINTER TRIGGERS AN ERROR
         for (auto components : pcb.get_components()){
             for (auto component : components.second){
                 SDL_DestroyTexture(component.get_rgb_image());

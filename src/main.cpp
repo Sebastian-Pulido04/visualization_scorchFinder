@@ -40,9 +40,18 @@ int main(int, char**)
         printf("Error: %s\n", SDL_GetError());
         return -1;
     }
+
+    SDL_DisplayMode displayMode;
+    if (SDL_GetCurrentDisplayMode(0, &displayMode) != 0) {
+        printf("Error al obtener el modo de pantalla: %s\n", SDL_GetError());
+        SDL_Quit();
+        return -1;
+    }
+
+    int screenWidth = displayMode.w;
     
     SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-    SDL_Window* window = SDL_CreateWindow("Scorch Finder", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
+    SDL_Window* window = SDL_CreateWindow("Scorch Finder", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, 720, window_flags);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 
     // Inicializar SDL_image y cargar imagen
@@ -61,7 +70,7 @@ int main(int, char**)
     ImGui_ImplSDL2_InitForSDLRenderer(window, renderer);
     ImGui_ImplSDLRenderer2_Init(renderer);
 
-    bool show_image_window = true;
+    //bool show_image_window = true;
     bool done = false;
 
     // resolucion de la imagen. Considerar que habra un escalamiento para reducir las dimensiones.
@@ -113,6 +122,8 @@ int main(int, char**)
     pcbs.push_back(PCB("01"));
     pcbs[0].set_rgb_image("/home/sebastian_pulido/pcb_scan/tests/pcb_og.jpg",renderer);
     pcbs[1].set_rgb_image("/home/sebastian_pulido/pcb_scan/tests/pcb_2.png",renderer);
+    pcbs[0].set_ir_image("/home/sebastian_pulido/pcb_scan/tests/heatmap_pcb1.png",renderer);
+    pcbs[1].set_ir_image("/home/sebastian_pulido/pcb_scan/tests/heatmap_pcb2.png",renderer);
     pcbs[0].set_components(renderer);
     pcbs[1].set_components(renderer);
 
@@ -142,18 +153,27 @@ int main(int, char**)
         /* PCB image window*/
         int image_width = pcbs[item_selected_idx].get_rgb_dimensions().first;
         int image_height = pcbs[item_selected_idx].get_rgb_dimensions().second;
-        ImGui::SetNextWindowSize(ImVec2(image_width + 20, image_height + 20));
-        if (show_image_window) {
-            ImGui::Begin("PCB", &show_image_window);
 
-            ImGui::Image((ImTextureID)(intptr_t)pcbs[item_selected_idx].get_rgb_image(), ImVec2(image_width, image_height)); 
-            //if(ImGui::Button("Mostrar menu")) inspection_finished = !inspection_finished;
-            //ImGui::Text("The number is: %lu",item_selected_idx);
-            pcb_window_position = ImGui::GetWindowPos();
-            pcb_window_draw_list = ImGui::GetWindowDrawList();
-            ImGui::End();
-        }
-        ImGui::ShowDemoWindow();
+        int ir_image_width = pcbs[item_selected_idx].get_ir_dimensions().first;
+        int ir_image_height = pcbs[item_selected_idx].get_ir_dimensions().second;
+
+        ImGui::SetNextWindowSize(ImVec2(image_width + 20, image_height + 20));
+        
+        ImGui::Begin("PCB", NULL);
+        ImGui::Image((ImTextureID)(intptr_t)pcbs[item_selected_idx].get_rgb_image(), ImVec2(image_width, image_height)); 
+        //if(ImGui::Button("Mostrar menu")) inspection_finished = !inspection_finished;
+        //ImGui::Text("The number is: %lu",item_selected_idx);
+        pcb_window_position = ImGui::GetWindowPos();
+        pcb_window_draw_list = ImGui::GetWindowDrawList();
+        ImGui::End();
+        
+
+        ImGui::SetNextWindowSize(ImVec2(ir_image_width + 20, ir_image_height + 20));
+        ImGui::Begin("PCB_Heatmap", NULL);
+        ImGui::Image((ImTextureID)(intptr_t)pcbs[item_selected_idx].get_ir_image(), ImVec2(ir_image_width, ir_image_height)); 
+        ImGui::End();
+
+        //ImGui::ShowDemoWindow();
         create_main_menu(inspection_finished, pcbs);
         
         

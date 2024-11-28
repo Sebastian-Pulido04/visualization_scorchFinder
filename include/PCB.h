@@ -25,7 +25,7 @@ class PCB{
         std::string get_id() const;
         void set_components(SDL_Renderer* renderer);
         std::unordered_map<const char*, std::vector<Component>> get_components() const;
-        void show_info();
+        //void show_info();
         void set_rgb_image(const char* image_path, SDL_Renderer* renderer);
         void set_ir_image(const char* image_path, SDL_Renderer* renderer);
         SDL_Texture* get_rgb_image() const;
