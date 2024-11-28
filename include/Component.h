@@ -7,9 +7,9 @@ class Component{
     private:
         const char* label;
         double confidence;
-        SDL_Rect* box;
-        std::pair<int,int> position;
-        std::pair<int,int> width_height;
+        //SDL_Rect* box;
+        //std::pair<int,int> position;
+        //std::pair<int,int> width_height;
         SDL_Texture* rgb_image;
         std::pair<int,int> rgb_dimensions;
     

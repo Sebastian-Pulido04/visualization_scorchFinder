@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <vector>
 #include <string>
+#include <iostream>
 
 
 
@@ -145,10 +146,24 @@ void fill_components_tab(const std::vector<PCB>& pcbs){
                 }
 
                 if (show_box){
-                    /* para renderizar las bounding boxes de los componentes, la idea es renderizarlo en la ventana de pcb 
-                       si no se puede, la idea es obetener la ubicacion de esta ventana en todo momento y dibujar sobre toda 
-                       la window
-                    */
+                    
+                    extern ImVec2 pcb_window_position;
+                    extern ImDrawList* pcb_window_draw_list;
+                    extern std::unordered_map<std::string,std::pair<float,float>> components_dimensions;
+                    extern std::unordered_map<std::string,std::pair<float,float>> components_centers;
+
+                    /* faltaria agregar manejo de errores, por si se introduce un label incorrecto*/
+                    //std::cout<<"Center: "<<components_centers[comp.get_label()].first<<", "<<components_centers[comp.get_label()].second<<std::endl;
+                    //std::cout<<"Dimensions: "<<components_dimensions[comp.get_label()].first<<", "<<components_dimensions[comp.get_label()].second<<std::endl;
+
+                    std::string comp_label = std::string(comp.get_label());
+                    float x = pcb_window_position.x + components_centers.at(comp_label).first - components_dimensions.at(comp_label).first / 2;
+                    float y = pcb_window_position.y + components_centers.at(comp_label).second - components_dimensions.at(comp_label).second / 2;
+                    
+                    ImVec2 rect_start(x, y); // Esquina superior izquierda
+                    ImVec2 rect_end(x + components_dimensions.at(comp_label).first, y + components_dimensions.at(comp_label).second); // Esquina inferior derecha
+                    pcb_window_draw_list->AddRect(rect_start, rect_end, IM_COL32(255, 0, 0, 255), 5.0f,0,3.0f); 
+
 
                 }
 
@@ -169,4 +184,8 @@ void free_textures(std::vector<PCB>& pcbs_vector){
             }
         }
     }
+}
+
+void fill_sumary_tab(){
+    
 }

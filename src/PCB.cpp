@@ -53,8 +53,8 @@ std::unordered_map<const char*, std::vector<Component>> PCB::get_components() co
 void PCB::set_components(SDL_Renderer* renderer){
     // en la funcion final, primero deberiamos crear el componente y pushear solo cuando tenga
     // todas sus caracteristicas
-    this->components["capacitor_misplaced"].push_back(Component("capacitor_misplaced_00"));
+    this->components["capacitor_misplaced"].push_back(Component("C1"));
     this->components["capacitor_misplaced"][0].set_rgb_image("/home/sebastian_pulido/pcb_scan/tests/c1_rgb.jpg",renderer);
-    this->components["uC_misplaced"].push_back(Component("uC_misplaced_00"));
+    this->components["uC_misplaced"].push_back(Component("uC1"));
     this->components["uC_misplaced"][0].set_rgb_image("/home/sebastian_pulido/pcb_scan/tests/uC1_rgb.jpg",renderer);
 }
