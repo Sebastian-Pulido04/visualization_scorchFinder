@@ -1,0 +1,128 @@
+[
+    {
+        "id":"PCB_00",
+        "rgb_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/pcb_large_og.jpg",
+        "ir_root":"/home/sebastian_pulido/pcb_scan/tests/heatmap_pcb1.png",
+        "components":
+        [
+            {
+                "label":"uC1",
+                "class":"micro_misplaced",
+                "confidence": 98.8,
+                "rgb_root":"/home/sebastian_pulido/pcb_scan/tests/uC1_rgb.jpg",
+                "ir_root":"/home/sebastian_pulido/pcb_scan/tests/uC1_rgb.jpg"
+            },
+
+            {
+                "label":"LDO1",
+                "class":"regulator_misplaced",
+                "confidence": 96.5,
+                "rgb_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg",
+                "ir_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg"
+            },
+
+            {
+                "label":"R4",
+                "class":"base_resistor",
+                "confidence": 96.5,
+                "rgb_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg",
+                "ir_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg"
+            },
+
+            {
+                "label":"R3",
+                "class":"resistor_misplaced",
+                "confidence": 96.5,
+                "rgb_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg",
+                "ir_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg"
+            }, 
+            {
+                "label":"R2",
+                "class":"resistor_misplaced",
+                "confidence": 96.5,
+                "rgb_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg",
+                "ir_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg"
+            },
+            {
+                "label":"R1",
+                "class":"resistor_damaged",
+                "confidence": 96.5,
+                "rgb_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg",
+                "ir_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg"
+            },
+            {
+                "label":"Q2",
+                "class":"transistor_misplaced",
+                "confidence": 96.5,
+                "rgb_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg",
+                "ir_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg"
+            },
+            {
+                "label":"Q1",
+                "class":"transistor_misplaced",
+                "confidence": 96.5,
+                "rgb_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg",
+                "ir_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg"
+            },
+            {
+                "label":"D2",
+                "class":"diode_misplaced",
+                "confidence": 96.5,
+                "rgb_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg",
+                "ir_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg"
+            }, 
+            {
+                "label":"D1",
+                "class":"diode_damaged",
+                "confidence": 96.5,
+                "rgb_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg",
+                "ir_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg"
+            },
+            {
+                "label":"C3",
+                "class":"capacitor_misplaced",
+                "confidence": 96.5,
+                "rgb_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg",
+                "ir_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg"
+            },
+            {
+                "label":"C2",
+                "class":"capacitor_misplaced",
+                "confidence": 96.5,
+                "rgb_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg",
+                "ir_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg"
+            },
+            {
+                "label":"C1",
+                "class":"capacitor_misplaced",
+                "confidence": 96.5,
+                "rgb_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg",
+                "ir_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg"
+            }
+        ]
+    },
+
+    {
+       "id":"PCB_01",
+        "rgb_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/pcb_1.png",
+        "ir_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/heatmap_pcb2.png",
+        "components":
+        [
+            {
+                "label":"uC1",
+                "class":"micro_misplaced",
+                "confidence": 98.8,
+                "rgb_root":"/home/sebastian_pulido/pcb_scan/tests/uC1_rgb.jpg",
+                "ir_root":"/home/sebastian_pulido/pcb_scan/tests/uC1_rgb.jpg"
+            },
+
+            {
+                "label":"C1",
+                "class":"capacitor_misplaced",
+                "confidence": 96.5,
+                "rgb_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg",
+                "ir_root":"/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/c1_rgb.jpg"
+            }
+        ] 
+    }
+]

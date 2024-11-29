@@ -12,6 +12,7 @@ void create_main_menu(bool enable, const std::vector<PCB>& pcbs_vector);
 void fill_components_tab(const std::vector<PCB>& pcbs);
 void free_textures(std::vector<PCB>& pcbs_vector);
 void fill_summary_tab(const std::vector<PCB>& pcbs);
+void read_json(std::string file_path, std::vector<PCB>& pcbs_vector, SDL_Renderer* renderer);
 
 
 

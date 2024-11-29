@@ -83,19 +83,19 @@ int main(int, char**)
     conectia mide de abajo hacia arriba*/
     components_centers = 
     {
-        {"LDO1", {(275 * scaling_factor.first),rgb_resolution.second - (1250 * scaling_factor.second)}}, // regulador
-        {"uC1", {(390 * scaling_factor.first),rgb_resolution.second - (300 * scaling_factor.second)}},
-        {"R4", {(590 * scaling_factor.first),rgb_resolution.second - (320 * scaling_factor.second)}},
-        {"R3", {(450 * scaling_factor.first),rgb_resolution.second - (1450 * scaling_factor.second)}},
-        {"R2", {(450 * scaling_factor.first),rgb_resolution.second - (1530 * scaling_factor.second)}},
-        {"R1", {(185 * scaling_factor.first),rgb_resolution.second - (325 * scaling_factor.second)}},
-        {"Q2", {(649.79 * scaling_factor.first),rgb_resolution.second - (700.05 * scaling_factor.second)}},
-        {"Q1", {(76.13 * scaling_factor.first),rgb_resolution.second - (320.614 * scaling_factor.second)}},
-        {"D2", {(655.56 * scaling_factor.first),rgb_resolution.second - (1050.28 * scaling_factor.second)}},
-        {"D1", {(276.13 * scaling_factor.first),rgb_resolution.second - (1500 * scaling_factor.second)}}, 
-        {"C3", {(71.13 * scaling_factor.first),rgb_resolution.second - (1320.36 * scaling_factor.second)}},
-        {"C2", {(535.56 * scaling_factor.first),rgb_resolution.second - (1315.71 * scaling_factor.second)}},
-        {"C1", {(327.47 * scaling_factor.first),rgb_resolution.second - (482 * scaling_factor.second)}} 
+        {"LDO1", {(300 * scaling_factor.first),rgb_resolution.second - (1240 * scaling_factor.second)}}, // regulador
+        {"uC1", {(420 * scaling_factor.first),rgb_resolution.second - (320 * scaling_factor.second)}},
+        {"R4", {(615 * scaling_factor.first),rgb_resolution.second - (355 * scaling_factor.second)}},
+        {"R3", {(480 * scaling_factor.first),rgb_resolution.second - (1430 * scaling_factor.second)}},
+        {"R2", {(475 * scaling_factor.first),rgb_resolution.second - (1520 * scaling_factor.second)}},
+        {"R1", {(225 * scaling_factor.first),rgb_resolution.second - (340 * scaling_factor.second)}},
+        {"Q2", {(670 * scaling_factor.first),rgb_resolution.second - (700.05 * scaling_factor.second)}},
+        {"Q1", {(105 * scaling_factor.first),rgb_resolution.second - (340 * scaling_factor.second)}},
+        {"D2", {(670 * scaling_factor.first),rgb_resolution.second - (1025.28 * scaling_factor.second)}},
+        {"D1", {(305 * scaling_factor.first),rgb_resolution.second - (1500 * scaling_factor.second)}}, 
+        {"C3", {(100 * scaling_factor.first),rgb_resolution.second - (1320.36 * scaling_factor.second)}},
+        {"C2", {(550 * scaling_factor.first),rgb_resolution.second - (1300.71 * scaling_factor.second)}},
+        {"C1", {(365 * scaling_factor.first),rgb_resolution.second - (482 * scaling_factor.second)}} 
         
     };
     /* dimensiones de los componentes en pixeles. component_dimensions.first = width, "".second = height*/
@@ -118,15 +118,16 @@ int main(int, char**)
 
     /* Aqui va el llamado a fill_data(), que lee el JSON para todas las pcbs, y usa los datos de component centers
     para llenar los atributos de los componentes de las pcbs*/
-    pcbs.push_back(PCB("00"));
+    /* pcbs.push_back(PCB("00"));
     pcbs.push_back(PCB("01"));
     pcbs[0].set_rgb_image("/home/sebastian_pulido/pcb_scan/tests/pcb_og.jpg",renderer);
     pcbs[1].set_rgb_image("/home/sebastian_pulido/pcb_scan/tests/pcb_2.png",renderer);
     pcbs[0].set_ir_image("/home/sebastian_pulido/pcb_scan/tests/heatmap_pcb1.png",renderer);
     pcbs[1].set_ir_image("/home/sebastian_pulido/pcb_scan/tests/heatmap_pcb2.png",renderer);
     pcbs[0].set_components(renderer);
-    pcbs[1].set_components(renderer);
+    pcbs[1].set_components(renderer); */
 
+    read_json("/home/sebastian_pulido/vis2/visualization_scorchFinder/tests/inspection_data.json", pcbs, renderer);
 
     // Main loop
     while (!done)

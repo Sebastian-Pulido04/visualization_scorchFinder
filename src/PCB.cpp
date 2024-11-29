@@ -1,11 +1,17 @@
 #include "PCB.h"
+#include <iostream>
 
 std::string PCB::get_id() const{
     return this->id;
 }
 
-PCB::PCB(std::string label){
-    this->id = "pcb_" + label;
+PCB::PCB(std::string id,  std::unordered_map<std::string, std::vector<Component>> components, const char* rgb_root, const char* ir_root, SDL_Renderer* renderer){
+    this->id = id;
+    //std::cout<<"id seteado correctamente"<<std::endl;
+    this->components = components;
+    //std::cout<<"components seteado correctamente"<<std::endl;
+    set_rgb_image(rgb_root, renderer);
+    set_ir_image(ir_root, renderer);
 }
 
 void PCB::set_rgb_image(const char* image_path, SDL_Renderer* renderer){
@@ -24,8 +30,9 @@ void PCB::set_rgb_image(const char* image_path, SDL_Renderer* renderer){
     int desired_height = 600;
     SDL_Texture* scaledTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, desired_width, desired_height);
     SDL_SetRenderTarget(renderer, scaledTexture);
+    SDL_Rect original_rect = {280,0,720,720};
     SDL_Rect destRect = {0, 0, desired_width, desired_height};
-    SDL_RenderCopy(renderer, original_image, NULL, &destRect);
+    SDL_RenderCopy(renderer, original_image, &original_rect, &destRect);
 
     // Restaurar el render target al predeterminado (pantalla)
     SDL_SetRenderTarget(renderer, NULL);
@@ -83,15 +90,15 @@ std::pair<int,int> PCB::get_ir_dimensions() const{
     return this->ir_dimensions;
 }
 
-std::unordered_map<const char*, std::vector<Component>> PCB::get_components() const{
+std::unordered_map<std::string, std::vector<Component>> PCB::get_components() const{
     return this->components;
 }
 
 void PCB::set_components(SDL_Renderer* renderer){
     // en la funcion final, primero deberiamos crear el componente y pushear solo cuando tenga
     // todas sus caracteristicas
-    this->components["capacitor_misplaced"].push_back(Component("C1"));
+    /* this->components["capacitor_misplaced"].push_back(Component("C1"));
     this->components["capacitor_misplaced"][0].set_rgb_image("/home/sebastian_pulido/pcb_scan/tests/c1_rgb.jpg",renderer);
     this->components["uC_misplaced"].push_back(Component("uC1"));
-    this->components["uC_misplaced"][0].set_rgb_image("/home/sebastian_pulido/pcb_scan/tests/uC1_rgb.jpg",renderer);
+    this->components["uC_misplaced"][0].set_rgb_image("/home/sebastian_pulido/pcb_scan/tests/uC1_rgb.jpg",renderer); */
 }

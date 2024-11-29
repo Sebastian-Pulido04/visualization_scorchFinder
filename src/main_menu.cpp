@@ -8,6 +8,8 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include "json.hpp"
+#include <fstream>
 
 
 
@@ -79,6 +81,7 @@ void create_main_menu(bool enable, const std::vector<PCB>& pcbs_vector){
                 {
                     ImGui::Text("RESUMEN");     // llamar a la funcion de summary()
                     ImGui::EndTabItem();
+                    fill_summary_tab(pcbs_vector);
                 }
 
                 ImGui::EndTabBar(); // Finaliza el contenedor de tabs
@@ -105,8 +108,8 @@ void fill_components_tab(const std::vector<PCB>& pcbs){
     static std::unordered_map<std::string, std::pair<bool,bool>> component_states;
 
     for (auto & item : pcbs[item_selected_idx].get_components()){ /* por cada categoria creamos un header colapsable*/
-        const char* label = item.first;
-        if(ImGui::CollapsingHeader(label,ImGuiTreeNodeFlags_None)){ /* dentro del collapsing header ponemos las instancias*/
+        std::string label = item.first;
+        if(ImGui::CollapsingHeader(label.c_str(),ImGuiTreeNodeFlags_None)){ /* dentro del collapsing header ponemos las instancias*/
             for (auto & comp : item.second){
                 /* unique_id es el id de la pcb mas el label del componente*/
                 std::string unique_id = pcbs[item_selected_idx].get_id() + "_" + std::string(comp.get_label());
@@ -117,9 +120,10 @@ void fill_components_tab(const std::vector<PCB>& pcbs){
                 bool& show_image = component_states[unique_id].first;
                 bool& show_box = component_states[unique_id].second;
                 // si hay componentes con el mismo label en otra pcb no hay conflicto porque no se muestran al mismo tiempo
-                std::string im =  std::string(comp.get_label()) + " show image"; 
-                std::string bx =  std::string(comp.get_label()) + " show box";
-
+                std::string im =  comp.get_label() +" show image"; //std::string(comp.get_label()) +" show image";
+                std::string bx =  comp.get_label() +" show box";
+                //std::cout<<"string: "<<comp.get_label()<<std::endl;
+                //std::cout<<"bounding box: "<<bx<<std::endl;
                 ImGui::Checkbox(im.c_str(),&show_image); 
                 ImGui::SameLine();
                 ImGui::Checkbox(bx.c_str(), &show_box);
@@ -129,7 +133,7 @@ void fill_components_tab(const std::vector<PCB>& pcbs){
 
                 if (show_image){
                     ImGui::SetNextWindowSize(ImVec2(image_width+30, image_height+30));
-                    ImGui::Begin(comp.get_label(), &show_image);
+                    ImGui::Begin(comp.get_label().c_str(), &show_image);
                     ImGui::Image((ImTextureID)(intptr_t)comp.get_rgb_image(), ImVec2(image_width, image_height)); 
                     ImGui::End();               
                 }
@@ -171,6 +175,57 @@ void free_textures(std::vector<PCB>& pcbs_vector){
     }
 }
 
-void fill_sumary_tab(){
-    
+void fill_summary_tab(const std::vector<PCB>& pcbs_vector){
+    for (PCB pcb : pcbs_vector){
+        if (ImGui::TreeNode(pcb.get_id().c_str())){
+            if (ImGui::BeginTable((pcb.get_id() + "_summary").c_str(),3)){
+                ImGui::TableSetupColumn("Componente");
+                ImGui::TableSetupColumn("Estado");
+                ImGui::TableSetupColumn("Accuracy_score");
+                ImGui::TableHeadersRow();
+
+                // Rellenar las filas
+                for (int row = 0; row < 5; ++row) { // 5 filas de ejemplo
+                    ImGui::TableNextRow();
+                    for (int column = 0; column < 3; ++column) { // 3 columnas
+                        ImGui::TableSetColumnIndex(column);
+                        ImGui::Text("Fila %d, Col %d", row, column);
+                    }
+                }
+
+            ImGui::EndTable();
+            }
+            ImGui::TreePop();
+        }
+    }
+}
+
+void read_json(std::string file_path, std::vector<PCB>& pcbs_vector, SDL_Renderer* renderer){
+    std::ifstream file(file_path);
+    nlohmann::json jsonData;
+    file >> jsonData;
+    for(auto pcb : jsonData){
+        std::unordered_map<std::string, std::vector<Component>> components_temp;
+        std::string id = pcb["id"];
+        std::string rgb_root = pcb["rgb_root"];
+        std::string ir_root = pcb["ir_root"];
+        for(auto component : pcb["components"]){
+            std::string label = component["label"];
+            //std::cout<<"label: "<<label<<std::endl;
+            std::string state = component["class"];
+            //std::cout<<"state: "<<state<<std::endl;
+            double confidence = component["confidence"];
+            //std::cout<<"confidence: "<<confidence<<std::endl;
+            std::string comp_rgb_root = component["rgb_root"];
+            //std::cout<<"path rgb: "<<comp_rgb_root<<std::endl;
+            std::string comp_ir_root = component["ir_root"];
+            //std::cout<<"path ir: "<<comp_ir_root<<std::endl;
+            components_temp[state].push_back(Component(label,confidence,comp_rgb_root.c_str(),comp_ir_root.c_str(),renderer));
+            
+            //std::cout<<"label: "<<components_temp[state][0].get_label()<<std::endl;
+            //std::cout<<".........."<<std::endl;
+        }
+        pcbs_vector.push_back(PCB(id, components_temp,rgb_root.c_str(),ir_root.c_str(),renderer));
+        //std::cout<<" |||||||||"<<std::endl;
+    }
 }

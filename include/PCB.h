@@ -11,7 +11,7 @@
 class PCB{
     private:
         std::string id;
-        std::unordered_map<const char*, std::vector<Component>> components;
+        std::unordered_map<std::string, std::vector<Component>> components;
         // RGB image
         SDL_Texture* rgb_image;
         // Heat image 
@@ -21,10 +21,10 @@ class PCB{
         std::pair<int,int> ir_dimensions;
 
     public:
-        PCB(std::string id);
+        PCB(std::string id,  std::unordered_map<std::string, std::vector<Component>> components, const char* rgb_root, const char* ir_root, SDL_Renderer* renderer);
         std::string get_id() const;
         void set_components(SDL_Renderer* renderer);
-        std::unordered_map<const char*, std::vector<Component>> get_components() const;
+        std::unordered_map<std::string, std::vector<Component>> get_components() const;
         //void show_info();
         void set_rgb_image(const char* image_path, SDL_Renderer* renderer);
         void set_ir_image(const char* image_path, SDL_Renderer* renderer);
