@@ -26,6 +26,7 @@ class Component{
         SDL_Texture* get_ir_image() const;
         std::pair<int,int> get_rgb_dimensions() const;
         std::pair<int,int> get_ir_dimensions() const;
+        double get_confidence() const;
 
 
 };

@@ -76,3 +76,7 @@ void Component::set_ir_image(const char* image_path, SDL_Renderer* renderer){
 std::pair<int,int> Component::get_rgb_dimensions() const{
     return this->rgb_dimensions;
 }
+
+double Component::get_confidence() const{
+    return this->confidence;
+}

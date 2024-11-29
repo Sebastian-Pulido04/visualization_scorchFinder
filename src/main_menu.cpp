@@ -185,12 +185,18 @@ void fill_summary_tab(const std::vector<PCB>& pcbs_vector){
                 ImGui::TableHeadersRow();
 
                 // Rellenar las filas
-                for (int row = 0; row < 5; ++row) { // 5 filas de ejemplo
-                    ImGui::TableNextRow();
-                    for (int column = 0; column < 3; ++column) { // 3 columnas
-                        ImGui::TableSetColumnIndex(column);
-                        ImGui::Text("Fila %d, Col %d", row, column);
+                for (auto label_comp : pcb.get_components()) { // 5 filas de ejemplo
+                    for (Component comp : label_comp.second){
+                        ImGui::TableNextRow();
+                        ImGui::TableSetColumnIndex(0);
+                        ImGui::Text("%s",comp.get_label().c_str());
+                        ImGui::TableSetColumnIndex(1);
+                        ImGui::Text("%s",label_comp.first.c_str());
+                        ImGui::TableSetColumnIndex(2);
+                        ImGui::Text("%.2f",comp.get_confidence());
                     }
+                    
+                    
                 }
 
             ImGui::EndTable();
